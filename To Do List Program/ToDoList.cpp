@@ -28,63 +28,83 @@ int menu()
 // ADDS TASK TO THE USER'S TO-DO LIST
 void add_task(vector<string> &todo_list)
 {
-    cout << "Please enter the task." << endl;
-    string task;
-    cin >> task;
+    //prompting the user for the new task
+    cout<< "Please enter the new task." << endl;
 
-    trim_input(task);
+    //initializing the variable for the user input
+    string input;
+    cin.ignore (numeric_limits<streamsize>:: max(), '\n');
+    getline(cin, input); //taking input from the user
 
-    if (!valid_input)
-    {
-        cout << "Please enter a valid task." << endl;
-        cin >> task;
-    }
-
-    todo_list.push_back(task);
-    cout << "The task has been added to your to-do list!" << endl;
-    return;
+    //adding the new task to the vector (todolist)
+    todolist.push_back(input);
+    cout<< "Your task has been added to the todolist." << endl;
 }
 
 void mark_as_complete(vector<string> &todo_list)
 {
-    if (list_is_empty(todo_list))
-    {
-        cout << "U're worrying too much. There are no tasks to be completed." << endl;
-        return;
+    //displaying the tasks to the user
+    view_tasks(todolist);
+    if (empty_list(todolist)) {
+    cout << "Nothing to mark as complete. COnGratuLAtionsss" << endl;
+    return;
     }
 
-    cout << "Enter the task number you would like to mark as completed." << endl;
+    //initializing variable for user choice of task number 
+    int task_number;
+    cin >> task_number;
 
-    int num;
-    cin >> num;
+    //size of the vector
+    int length = todolist.size();
 
-    int size = todo_list.size();
+    //initializing the variable for valid input
+    bool valid;
 
-    if ((size < num) || (size <= 0))
-    {
-        cout << "Please enter a valid task number." << endl;
-        cin >> num;
+    //iterating until valid input is received
+    while (!valid){
+    if ((task_number > length) || (task_number <= 0)){
+        //prompting the user for valid input
+        cout << "Enter a valid task number please!" << endl;
+        cin >> task_number;
+        valid = false;
     }
 
-    string task = todo_list[num - 1];
-    todo_list.erase(todo_list.begin() + (num - 1));
+    //valid input received
+    else valid = true;
+    }
 
-    cout << task << " has been marked as completed!" << endl;
+    //marking the task as completed 
+    todolist.erase(todolist.begin() + task_number -1);
+    cout << "The task has been marked as completed" << endl;
 }
 
 void view_tasks(vector<string> &todo_list)
 {
-    if (list_is_empty(todo_list))
-    {
-        cout << "Oops no! Your to-do list is empty. CoNgRaTuLaTiOnS!!!!" << endl;
+   //if the to do list is empty
+    if (empty_list(todolist)){
+        cout << "Your to-do list is empty." << endl;
         return;
     }
 
-    int size = todo_list.size();
-
-    for (int i = 0; i < size; i++)
-    {
-        cout << i + 1 << ". " << todo_list[i] << endl;
+    //size of the vector
+    int length = todolist.size();
+    
+    //iterating over the vector
+    for (int i=0; i<length; i++){
+         
+        //displaying the task
+        cout << i+1 << ". " << todolist[i] << endl; 
     }
-    return;
+}
+
+//checking for empty list
+bool empty_list(const vector<string> &todolist){
+    //size of the vector
+    int length = todolist.size();
+
+    //if the vector has no elements
+    if (length == 0) return true;
+
+    // if the vector does have elements (not empty)
+    return false;
 }
